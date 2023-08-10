@@ -40,7 +40,7 @@ def consultarCHATGPT(frase):
     # Print the response
     return completion.choices[0].text
         
-frase_final = captar_audio(mic)
+frase_final = captar_audio(mic) 
 
 resposta = consultarCHATGPT(frase_final)
 
