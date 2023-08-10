@@ -28,6 +28,10 @@ pip install playsound
 ```
 pip install gTTS
 ```
+
+```
+pip install unidecode
+```
 <br>
 
 <h4>Obeservação: caso o "pyaudio" de erro utilize o diretório que está junto com arquivo do código para fazer a instalação do pacote.</h4>
