@@ -20,6 +20,14 @@ pip install speech_recognition
 ```
 pip install pyaudio
 ```
+
+```
+pip install playsound
+```
+
+```
+pip install gTTS
+```
 <br>
 
 <h4>Obeservação: caso o "pyaudio" de erro utilize o diretório que está junto com arquivo do código para fazer a instalação do pacote.</h4>

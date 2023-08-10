@@ -1,13 +1,15 @@
 import speech_recognition as sr
 import openai
+import gtts
+from playsound import playsound
 
-mic = sr.Recognizer()
-
-def captar_audio(mic):
+def captar_audio():
+    
+    mic = sr.Recognizer()
     with sr.Microphone() as source:
         mic.adjust_for_ambient_noise(source)
         
-        print('A')
+        playsound('question.mp3')
         
         audio_captado = mic.listen(source)
         
@@ -16,6 +18,11 @@ def captar_audio(mic):
         print(frase)
         
         return frase
+    
+#with open('frase.txt', 'r') as file:
+#    for line in file:
+#       fala = gtts.gTTS(line, lang = 'pt-BR')
+#       fala.save('sound.mp3')
         
 def consultarCHATGPT(frase):
     openai.api_key = 'chave'
@@ -40,7 +47,7 @@ def consultarCHATGPT(frase):
     # Print the response
     return completion.choices[0].text
         
-frase_final = captar_audio(mic) 
+frase_final = captar_audio() 
 
 resposta = consultarCHATGPT(frase_final)
 
