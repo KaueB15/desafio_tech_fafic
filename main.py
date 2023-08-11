@@ -5,37 +5,23 @@ from playsound import playsound
 from funcoes_txt import *
 import os
 
-def captar_audio():
+def captar_audio(texto, sound):
     
     mic = sr.Recognizer()
     with sr.Microphone() as source:
         mic.adjust_for_ambient_noise(source)
         
-        playsound('sounds/question.mp3')
-        print('Qual a sua pergunta?')
+        playsound(sound)
+        print(texto)
         
         audio_captado = mic.listen(source)
         
         frase = mic.recognize_google(audio_captado, language = 'pt-BR')
         
         return frase
-    
-def continuarPerguntas():
-    mic = sr.Recognizer()
-    with sr.Microphone() as source:
-        mic.adjust_for_ambient_noise(source)
-        
-        playsound('sounds/outrapergunta.mp3')
-        print('Deseja fazer outra pergunta?')
-        
-        audio_captado = mic.listen(source)
-        
-        respostaContinuar = mic.recognize_google(audio_captado, language = 'pt-BR')
-        
-        return respostaContinuar
         
 def consultarCHATGPT(frase):
-    openai.api_key = 'chave'
+    openai.api_key = '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'
     
     # Set the model and prompt
     model_engine = "text-davinci-003"
@@ -60,9 +46,11 @@ def consultarCHATGPT(frase):
 continuar = 'sim'
 while(True):
     if(continuar == 'sim'):
-        frase_final = captar_audio() 
+        frase_final = captar_audio('Qual a sua pergunta?', 'sounds/question.mp3')
+        print(frase_final) 
 
         resposta = consultarCHATGPT(frase_final)
+        print(resposta)
 
         salvarResposta(resposta)
 
@@ -74,7 +62,7 @@ while(True):
         playsound('resposta.mp3')
         os.remove('resposta.txt')
         os.remove('resposta.mp3')
-        continuar = continuarPerguntas()
+        continuar = captar_audio('Deseja fazer outra pergunta?' ,'sounds/outrapergunta.mp3')
     elif(continuar == 'não'):
         print('Programa finalizado')
         break
