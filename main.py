@@ -3,6 +3,7 @@ import openai
 import gtts
 from playsound import playsound
 from funcoes_txt import *
+import os
 
 def captar_audio():
     
@@ -17,17 +18,24 @@ def captar_audio():
         
         frase = mic.recognize_google(audio_captado, language = 'pt-BR')
         
-        print(frase)
-        
         return frase
     
-with open('resposta.txt', 'r') as file:
-    for line in file:
-       fala = gtts.gTTS(line, lang = 'pt-BR')
-       fala.save('sound.mp3')
+def continuarPerguntas():
+    mic = sr.Recognizer()
+    with sr.Microphone() as source:
+        mic.adjust_for_ambient_noise(source)
+        
+        playsound('sounds/outrapergunta.mp3')
+        print('Deseja fazer outra pergunta?')
+        
+        audio_captado = mic.listen(source)
+        
+        respostaContinuar = mic.recognize_google(audio_captado, language = 'pt-BR')
+        
+        return respostaContinuar
         
 def consultarCHATGPT(frase):
-    openai.api_key = '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'
+    openai.api_key = 'chave'
     
     # Set the model and prompt
     model_engine = "text-davinci-003"
@@ -48,13 +56,27 @@ def consultarCHATGPT(frase):
 
     # Print the response
     return completion.choices[0].text
-        
-frase_final = captar_audio() 
 
-resposta = consultarCHATGPT(frase_final)
+continuar = 'sim'
+while(True):
+    if(continuar == 'sim'):
+        frase_final = captar_audio() 
 
-salvarProdutos(resposta)
+        resposta = consultarCHATGPT(frase_final)
 
+        salvarResposta(resposta)
 
-
-print(resposta) 
+        with open('resposta.txt', 'r') as file:
+            for line in file:
+                if(len(line) > 2):
+                    fala = gtts.gTTS(line, lang = 'pt-BR')
+                    fala.save('resposta.mp3')                    
+        playsound('resposta.mp3')
+        os.remove('resposta.txt')
+        os.remove('resposta.mp3')
+        continuar = continuarPerguntas()
+    elif(continuar == 'não'):
+        print('Programa finalizado')
+        break
+    else:
+        break
